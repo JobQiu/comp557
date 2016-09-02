@@ -1,4 +1,5 @@
-import re, util
+import re, util, collections
+# added import of collections module
 
 ############################################################
 # Problem 1a: UCS test case
@@ -8,7 +9,12 @@ import re, util
 # util.createSearchProblemFromString.
 def createUCSTestCase(n):
     # BEGIN_YOUR_CODE (around 5 lines of code expected)
-    raise Exception("Not implemented yet")
+
+    s = "beg mid 2"
+    for i in range(2, n):
+	s = s + "\nbeg " + str(i) + " 2"
+    return util.createSearchProblemFromString("beg", "end", s + "\nmid end 2")
+
     # END_YOUR_CODE
 
 ############################################################
@@ -22,9 +28,24 @@ def createUCSTestCase(n):
 def astarReduction(problem, heuristic):
     class NewSearchProblem(util.SearchProblem):
         # Please refer to util.SearchProblem to see the functions you need to
-        # overried.
+        # override.
         # BEGIN_YOUR_CODE (around 9 lines of code expected)
-        raise Exception("Not implemented yet")
+	
+	def __init__(self): self.start = problem.startState()
+	# Return the start state.
+	def startState(self): return self.start
+
+	# Return whether |state| is a goal state or not.	
+	def isGoal(self, state): return problem.isGoal(state) ### not sure if correct
+	
+	# Return a list of (action, newState, cost) tuples corresponding to edges
+	# coming out of |state|.
+	def succAndCost(self, state):
+	    edges = []
+	    for (action, newState, cost) in problem.succAndCost(state):	    		
+		edges.append((action, newState, cost + heuristic(newState) - heuristic(state)))
+	    return edges
+	    
         # END_YOUR_CODE
     newProblem = NewSearchProblem()
     return newProblem
