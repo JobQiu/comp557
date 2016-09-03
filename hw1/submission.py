@@ -71,8 +71,7 @@ class DeliveryProblem(util.SearchProblem):
     # |scenario|: delivery specification.
     def __init__(self, scenario):
         self.scenario = scenario
-        self.stats = list([0] * self.scenario.numPackages)
-        self.start = (self.scenario.truckLocation, tuple(self.stats))
+        self.start = (self.scenario.truckLocation, tuple(list([0] * self.scenario.numPackages)))
     # Return the start state.
     def startState(self):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
@@ -112,7 +111,7 @@ class DeliveryProblem(util.SearchProblem):
                 new_stat = list(state[1])
                 new_stat[n] = 2
                 edges.append(('Dropoff', (state[0], tuple(new_stat)), 0))
-        # count the cost of move
+        # calculate the cost of move
         k = 1
         for i in range(self.scenario.numPackages):
             if(list(state[1])[i] == 1):
@@ -181,12 +180,9 @@ def createHeuristic2(scenario, package):
 # createHeuristic2.
 def createHeuristic3(scenario):
     # BEGIN_YOUR_CODE (around 5 lines of code expected)
-    far = 0
-    n = 0
-    for i in range(scenario.numPackages):
-        dist = abs(scenario.truckLocation[0] - scenario.pickupLocations[i][0]) + abs(scenario.truckLocation[1] - scenario.pickupLocations[i][1])
-        if(dist > far):
-            n = i
-            far = dist
-    return createHeuristic2(scenario, n)
+        max = createHeuristic2(scenario, 0)
+        for i in range(scenario.numPackages):
+            if(createHeuristic2(scenario, i) > max):
+                max = createHeuristic2(scenario, i)
+        return max
     # END_YOUR_CODE
