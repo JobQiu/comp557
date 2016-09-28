@@ -127,35 +127,35 @@ class ValueIteration(util.MDPAlgorithm):
 class CounterexampleMDP(util.MDP):
     def __init__(self):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        raise Exception("Not implemented yet")
+        return none
         # END_YOUR_CODE
 
     def startState(self):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        raise Exception("Not implemented yet")
+        return none
         # END_YOUR_CODE
 
     # Return set of actions possible from |state|.
     def actions(self, state):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        raise Exception("Not implemented yet")
+        return none
         # END_YOUR_CODE
 
     # Return a list of (newState, prob, reward) tuples corresponding to edges
     # coming out of |state|.
     def succAndProbReward(self, state, action):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        raise Exception("Not implemented yet")
+        return none
         # END_YOUR_CODE
 
     def discount(self):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        raise Exception("Not implemented yet")
+        return none
         # END_YOUR_CODE
 
 def counterexampleAlpha():
     # BEGIN_YOUR_CODE (around 1 line of code expected)
-    raise Exception("Not implemented yet")
+        return nones
     # END_YOUR_CODE
 
 ############################################################
@@ -192,7 +192,7 @@ class BlackjackMDP(util.MDP):
     # busting) by setting the deck to (0,).
     def succAndProbReward(self, state, action):
         # BEGIN_YOUR_CODE (around 40 lines of code expected)
-        raise Exception("Not implemented yet")
+	print "here"
         # END_YOUR_CODE
 
     def discount(self):
@@ -207,6 +207,6 @@ def peekingMDP():
     least 10% of the time.
     """
     # BEGIN_YOUR_CODE (around 2 lines of code expected)
-    raise Exception("Not implemented yet")
+    print "here"
     # END_YOUR_CODE
 
