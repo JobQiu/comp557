@@ -283,9 +283,10 @@ class BlackjackMDP(util.MDP):
         queue.append(self.startState())
         while len(queue) > 0:
             state = queue.pop()
+            if state[2] == (0,):  continue
             for action in self.actions(state):
                 for newState, prob, reward in self.succAndProbReward(state, action):
-                    if newState not in self.states:
+		    if newState not in self.states:
                         self.states.add(newState)
                         queue.append(newState)
 
