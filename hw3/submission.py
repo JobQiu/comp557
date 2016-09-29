@@ -45,46 +45,6 @@ def policyEvaluation(mdp, V, pi, epsilon=0.001):
 
     return V
 
-    """"
-    mdp.computeStates()
-    if len(V) == 0:
-	V = {k: 0 for k in mdp.states}
-    vT_1 = V.copy()
-    vT = {}
-    while 1:
-	for s in mdp.states:
-	    V[s] = 0
-	    action = pi[s]
-	    for newState, prob, reward in mdp.succAndProbReward(s, action):
-		V[s] += prob * (reward + mdp.discount() * vT_1[newState])
-	if max(abs(x - y) for x,y in zip(V.values(), vT_1.values())) <= epsilon:
-	    break
-	vT_1 = V.copy()
-
-    return V
-    """
-    """
-    mdp.computeStates()
-    if len(V) == 0:
-	V = {k: 0 for k in mdp.states}
-    vT_1 = V.copy()
-    vT = {}
-    for s in V.keys():
-	value = 0
-	for tup in mdp.succAndProbReward(s, pi[s]):
-	    value += tup[1] * (tup[2] + (mdp.discount() * vT_1[tup[0]]))
-	vT[s] = value
-    while max(abs(x - y) for x,y in zip(vT.values(), vT_1.values())) > epsilon:
-	vT_1 = vT.copy()
-	vT = {}
-	for s in V.keys():
-	    value = 0
-	    for tup in mdp.succAndProbReward(s, pi[s]):
-		value += tup[1] * (tup[2] + (mdp.discount() * vT_1[tup[0]]))
-	    vT[s] = value
-
-    return vT
-    """
     # END_YOUR_CODE
 
 ############################################################
@@ -152,22 +112,6 @@ class ValueIteration(util.MDPAlgorithm):
 
 	pi = computeOptimalPolicy(mdp, V)
 
-	"""
-	self.V = {k:0 for k in mdp.states}
-	self.pi = {k:random.choice(mdp.actions(k)) for k in mdp.states}
-	unConverged = True
-	while unConverged:
-	    vT_1 = V.copy()
-	    V = {k:0 for k in mdp.states}
-	    for s in mdp.states:
-		value = 0
-		for tup in mdp.succAndProbReward(s, pi[s]):
-		    value += tup[1] * (tup[2] + (mdp.discount() * vT_1[tup[0]]))
-		V[s] = value
-	    pi = computeOptimalPolicy(mdp, V)
-	    if max(abs(x - y) for x,y in zip(V.values(), vT_1.values())) <= epsilon:
-		unConverged = False
-	"""	
         # END_YOUR_CODE
         self.pi = pi
         self.V = V
