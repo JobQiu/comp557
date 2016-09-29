@@ -202,8 +202,6 @@ class BlackjackMDP(util.MDP):
         # BEGIN_YOUR_CODE (around 40 lines of code expected)
 	hand, nextCard, deckMult = state
 	possibles = []
-	if deckMult == None:
-	    return []
 	if deckMult == (0,):
 	    return []
 	
@@ -283,9 +281,10 @@ class BlackjackMDP(util.MDP):
         queue.append(self.startState())
         while len(queue) > 0:
             state = queue.pop()
-            if state[2] == (0,):  continue
+            # if state[2] == (0,):  continue
             for action in self.actions(state):
                 for newState, prob, reward in self.succAndProbReward(state, action):
+		    if reward == (0,): continue
 		    if newState not in self.states:
                         self.states.add(newState)
                         queue.append(newState)
