@@ -137,24 +137,33 @@ class CounterexampleMDP(util.MDP):
     # Return set of actions possible from |state|.
     def actions(self, state):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        return none
+	if state == 1:
+	    return []
+	if state == 0:
+	    return ['Stay', 'Quit']
         # END_YOUR_CODE
 
     # Return a list of (newState, prob, reward) tuples corresponding to edges
     # coming out of |state|.
     def succAndProbReward(self, state, action):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        return none
+        if state == 1:
+	    return []
+	if state == 0:
+	    if action == 'Stay':
+		return [(0, 1/3, 4), (1, 2/3, 4)]
+	    if action == 'Quit':
+		return [(1, 1, 5)]
         # END_YOUR_CODE
 
     def discount(self):
         # BEGIN_YOUR_CODE (around 1 line of code expected)
-        return none
+        return 1
         # END_YOUR_CODE
 
 def counterexampleAlpha():
     # BEGIN_YOUR_CODE (around 1 line of code expected)
-        return none
+        return 1/3
     # END_YOUR_CODE
 
 ############################################################
