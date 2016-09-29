@@ -17,6 +17,7 @@ def computeQ(mdp, V, state, action):
     return que
     # END_YOUR_CODE
 
+
 ############################################################
 # Problem 3.1.2
 
@@ -27,6 +28,42 @@ def policyEvaluation(mdp, V, pi, epsilon=0.001):
     dictionaries.
     """
     # BEGIN_YOUR_CODE (around 8 lines of code expected)
+    lastV = collections.defaultdict(int)
+
+    for i in range(100000):  # ok?
+	for s in mdp.states:
+	    V[s] = 0
+	    a = pi[s]
+	    for nS, prob, reward in mdp.succAndProbReward(s, a):
+		V[s] += prob * (reward + mdp.discount() * lastV[nS])
+
+	a = maxDiff(V, lastV)
+	if a < epsilon:
+	    break
+
+	lastV = V.copy()
+
+    return V
+
+    """"
+    mdp.computeStates()
+    if len(V) == 0:
+	V = {k: 0 for k in mdp.states}
+    vT_1 = V.copy()
+    vT = {}
+    while 1:
+	for s in mdp.states:
+	    V[s] = 0
+	    action = pi[s]
+	    for newState, prob, reward in mdp.succAndProbReward(s, action):
+		V[s] += prob * (reward + mdp.discount() * vT_1[newState])
+	if max(abs(x - y) for x,y in zip(V.values(), vT_1.values())) <= epsilon:
+	    break
+	vT_1 = V.copy()
+
+    return V
+    """
+    """
     mdp.computeStates()
     if len(V) == 0:
 	V = {k: 0 for k in mdp.states}
@@ -47,6 +84,7 @@ def policyEvaluation(mdp, V, pi, epsilon=0.001):
 	    vT[s] = value
 
     return vT
+    """
     # END_YOUR_CODE
 
 ############################################################
@@ -98,8 +136,25 @@ class ValueIteration(util.MDPAlgorithm):
     def solve(self, mdp, epsilon=0.001):
         mdp.computeStates()
         # BEGIN_YOUR_CODE (around 11lines of code expected)
-	V = {k:0 for k in mdp.states}
-	pi = {k:random.choice(mdp.actions(k)) for k in mdp.states}
+	V = collections.defaultdict(int)
+	lastV = V.copy()
+	V1 = V.copy()
+
+	for i in range(100000):  # ok?
+	    for s in mdp.states:
+		V1[s] = max(computeQ(mdp, lastV, s, a) for a in mdp.actions(s))
+
+	    if maxDiff(lastV, V1) < epsilon:
+		break
+
+	    lastV = V1.copy()
+	V = V1
+
+	pi = computeOptimalPolicy(mdp, V)
+
+	"""
+	self.V = {k:0 for k in mdp.states}
+	self.pi = {k:random.choice(mdp.actions(k)) for k in mdp.states}
 	unConverged = True
 	while unConverged:
 	    vT_1 = V.copy()
@@ -112,7 +167,7 @@ class ValueIteration(util.MDPAlgorithm):
 	    pi = computeOptimalPolicy(mdp, V)
 	    if max(abs(x - y) for x,y in zip(V.values(), vT_1.values())) <= epsilon:
 		unConverged = False
-		
+	"""	
         # END_YOUR_CODE
         self.pi = pi
         self.V = V
@@ -155,7 +210,7 @@ class CounterexampleMDP(util.MDP):
 
 def counterexampleAlpha():
     # BEGIN_YOUR_CODE (around 1 line of code expected)
-        return nones
+        return none
     # END_YOUR_CODE
 
 ############################################################
@@ -192,11 +247,94 @@ class BlackjackMDP(util.MDP):
     # busting) by setting the deck to (0,).
     def succAndProbReward(self, state, action):
         # BEGIN_YOUR_CODE (around 40 lines of code expected)
-	print "here"
+	hand, nextCard, deckMult = state
+	possibles = []
+	if deckMult == None:
+	    return []
+	if deckMult == (0,):
+	    return []
+	
+	### player decides to 'Take'
+	if action == 'Take':
+	    if nextCard != None:	# peeked last time
+		hand += self.cardValues[nextCard]
+		prob = 1
+		reward = 0
+		if hand > self.threshold:	# bust
+		    newState = (hand, None, (0,))
+		else:
+		    newDeckMult = list(deckMult)
+		    newDeckMult[nextCard] -= 1
+		    if sum(newDeckMult) <= 0:
+			reward = hand
+			newState = (hand, None, (0,))
+		    else:
+			newState = (hand, None, tuple(newDeckMult))
+		possibles.append((newState, prob, reward))
+	    else:			# didn't peek last time
+		sumPossibles = sum(deckMult)
+		for i in range(len(self.cardValues)):
+		    newDeckMult = list(deckMult)
+		    prob = newDeckMult[i] / float(sumPossibles)
+		    if prob == 0: continue
+		    reward = 0
+
+		    newHand = hand + self.cardValues[i]
+		    if newHand > self.threshold:	# bust
+			newState = (newHand, None, (0,))
+		    else:
+			assert (newDeckMult[i] > 0)
+			newDeckMult[i] -= 1
+			if sum(newDeckMult) <= 0:
+			    reward = newHand
+			    newState = (newHand, None, (0,))
+			else:
+			    newState = (newHand, None, tuple(newDeckMult))
+		    possibles.append((newState, prob, reward))
+
+	### player decides to 'Peek'
+	if action == 'Peek':
+	    if nextCard != None:  # can't peek twice in a row
+		return []
+	    else:
+		sumPossibles = sum(deckMult)
+		for i in range(len(self.cardValues)):
+		    newDeckMult = list(deckMult)
+		    prob = newDeckMult[i] / float(sumPossibles)
+		    if prob == 0: continue
+
+		    reward = -self.peekCost
+		    newState = (hand, i, newDeckMult)
+		    possibles.append((newState, prob, reward))
+
+	### player decides to 'Quit'
+	if action == 'Quit':
+	    newState = (hand, None, (0,))
+	    prob = 1
+	    reward = hand
+	    possibles.append((newState, prob, reward))
+
+	return possibles
         # END_YOUR_CODE
 
     def discount(self):
         return 1
+
+    # Compute set of states reachable from startState.  Helper function for
+    # MDPAlgorithms to know which states to compute values and policies for.
+    # This function sets |self.states| to be the set of all states.
+    def computeStates(self):
+        self.states = set()
+        queue = []
+        self.states.add(self.startState())
+        queue.append(self.startState())
+        while len(queue) > 0:
+            state = queue.pop()
+            for action in self.actions(state):
+                for newState, prob, reward in self.succAndProbReward(state, action):
+                    if newState not in self.states:
+                        self.states.add(newState)
+                        queue.append(newState)
 
 ############################################################
 # Problem 3.2.2
@@ -207,6 +345,19 @@ def peekingMDP():
     least 10% of the time.
     """
     # BEGIN_YOUR_CODE (around 2 lines of code expected)
-    print "here"
+    return BlackjackMDP([6, 4, 16], 15, 20, 1)
     # END_YOUR_CODE
+
+
+###################
+### helper function
+def maxDiff(v1, v2):
+    tmp = []
+    for k in v1:
+	tmp.append(abs(v1[k] - v2[k]))
+    return max(tmp)
+###################
+
+
+
 

@@ -107,7 +107,8 @@ def test2a():
              ([], mdp1, postBustState, 'Take'),
              ([], mdp1, postBustState, 'Peek'),
              ([], mdp1, postBustState, 'Quit'),
-             ([((12, None, (0,0)), 1, 12)], mdp2, preEmptyState, 'Take')]
+	     # modified to accept (0,) as empty deck
+             ([((12, None, (0,)), 1, 12)], mdp2, preEmptyState, 'Take')] 
     for gold, mdp, state, action in tests:
         if not grader.requireIsEqual(gold,
                                      mdp.succAndProbReward(state, action)):
