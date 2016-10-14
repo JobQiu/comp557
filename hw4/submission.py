@@ -456,7 +456,7 @@ class SchedulingCSPConstructor():
         # BEGIN_YOUR_CODE (around 4 lines of code expected)      
         for req in self.profile.requests:
             for cid in req.cids:
-                csp.add_unary_potential(cid, lambda x : x in req.semesters or x == None)
+                csp.add_unary_potential(cid, lambda x : x in req.semesters or x == None or req.semesters == [])
         # END_YOUR_CODE
 
     def add_request_weights(self, csp):

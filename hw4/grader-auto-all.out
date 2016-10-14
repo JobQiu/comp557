@@ -4,74 +4,86 @@ mode: all
 parts:
 - maxPoints: 0
   maxSeconds: 1000000
-  messages: [File 'writeup.pdf' does not exist]
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: writeupValid
   points: 0
   seconds: 0
 - maxPoints: 5
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.1a-0
-  points: 5
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.1b-0
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.1c
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 7
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.1d-0
-  points: 7
+  points: 0
   seconds: 0
 - maxPoints: 8
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.1d-1
-  points: 8
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.2b-0
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.3a-0
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.3b-0
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.3c-0
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: 3.3d-0
-  points: 10
+  points: 0
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: []
+  messages: ['Exception thrown: <type ''exceptions.AttributeError''> -- ''module''
+      object has no attribute ''SIGALRM''']
   name: profile.txt
-  points: 10
+  points: 0
   seconds: 0
-totalPoints: 100
+totalPoints: 0
