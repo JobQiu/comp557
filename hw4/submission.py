@@ -542,21 +542,32 @@ class SchedulingCSPConstructor():
         @param csp: The CSP where the additional constraints will be added to.
         """
         # BEGIN_YOUR_CODE (around 16 lines of code expected)
-        courses_units = []
+        def units(x, y, s):
+            if (y == s):
+                if(x == 0 and y == None):
+                    return True
+                elif(x != 0 and y != None):
+                    return True
+                else:
+                    return False
+            else:
+                if(x == 0):
+                    return True
+                else:
+                    return False
         for c in range(len(csp.varNames)):
             for s in range(len(self.profile.semesters)):
-                dom = range(self.bulletin.courses[csp.varNames[c]].minUnits, self.bulletin.courses[csp.varNames[c]].maxUnits + 1)
-                dom.append(0)
-                csp.add_variable(csp.varNames[c] + '-' + self.profile.semesters[s], dom)
-                
-            #csp.add_variable(csp.varNames[c] + '-units', \
-            #range(self.bulletin.courses[csp.varNames[c]].minUnits, self.bulletin.courses[csp.varNames[c]].maxUnits + 1))
-            #courses_units.append(csp.varNames[c] + '-units')
-        #n = get_sum_variable(csp, 'sum-of-units', courses_units, self.profile.maxUnits)
-        #csp.add_unary_potential(n, lambda x: x in range(self.profile.minUnits, self.profile.maxUnits + 1))
-        print csp.varNames
-        print csp.valNames
-        #sys.stdout.flush()
+                dom = range(self.bulletin.courses[csp.varNames[c]].minUnits, self.bulletin.courses[csp.varNames[c]].maxUnits + 1) + [0]
+                csp.add_variable((csp.varNames[c], self.profile.semesters[s]), dom)
+                csp.add_binary_potential((csp.varNames[c], self.profile.semesters[s]), csp.varNames[c], lambda x, y : units(x, y, self.profile.semesters[s]))
+        
+        for s in self.profile.semesters:
+            sum = []
+            for v in range(len(csp.varNames)):
+                if(type(csp.varNames[v]) == tuple and csp.varNames[v][1] == s):
+                    sum.append(csp.varNames[v])
+            sum_var = get_sum_variable(csp, s + '-units', sum, self.profile.maxUnits)
+            csp.add_unary_potential(sum_var, lambda x : x in range(self.profile.minUnits, self.profile.maxUnits + 1))
         # END_YOUR_CODE
 
     def add_all_additional_constraints(self, csp):

@@ -64,13 +64,9 @@ parts:
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
-  messages: ['Expected ''4'', but got ''49152''', 'Exception thrown: <type ''exceptions.TypeError''>
-      -- unsupported operand type(s) for +=: ''int'' and ''NoneType''', "  File \"\
-      grader.py\", line 250, in test33d_0\n    grader.requireIsTrue(verify_schedule(bulletin,\
-      \ profile, solution))\n", "  File \"grader.py\", line 162, in verify_schedule\n\
-      \    unitCounters[semester] += units\n"]
+  messages: []
   name: 3.3d-0
-  points: 0
+  points: 10
   seconds: 0
 - maxPoints: 10
   maxSeconds: 1000000
@@ -78,4 +74,4 @@ parts:
   name: profile.txt
   points: 10
   seconds: 0
-totalPoints: 90
+totalPoints: 100
