@@ -19,7 +19,7 @@ def runKMeans(k,patches,maxIter):
     # This line starts you out with randomly initialized centroids in a matrix 
     # with patchSize rows and k columns. Each column is a centroid.
     centroids = np.random.randn(patches.shape[0],k)
-   #print "Centroids:", centroids
+
     numPatches = patches.shape[1]
 
     for i in range(maxIter):
@@ -28,29 +28,20 @@ def runKMeans(k,patches,maxIter):
         # assignment step
         zee = np.zeros( (numPatches, k) )
         for p in range(numPatches):
-            #print "p:", p
-            temp = []
+            tempDistances = []
             for x in centroids.T:
-                #print np.linalg.norm(patches[:,p] - x)
-                temp.append(np.linalg.norm(patches[:,p] - x))
-            #print np.argmin(temp)
-            zee[p, np.argmin(temp)] = 1
+                #tempDistances.append(math.sqrt(sum([(a-b)**2 for a,b in zip(patches[:,p], x)])))
+                tempDistances.append(np.linalg.norm(patches[:,p] - x))
+            zee[p, np.argmin(tempDistances)] = 1
 
-        #? handle empty clusters by assigning the most distant point from the largest cluster to one of the empty clusters; do this until no more empty clusters
+        # handle empty clusters by assigning the most distant point from the largest cluster to one of the empty clusters; do this until no more empty clusters
         while True:
             sums = np.sum(zee, axis=0)
-           #print "zee:", zee
             if not (0 in sums):
-               #print "no0zee"
                 break
-           #print "sums:", sums
             for c in range(len(sums)):
-               #print "c:", c
                 if (sums[c] == 0):
-                    print "c == 0:", c
-                    #find large cluster and most distant point to it
                     maxC = np.argmax(sums)
-                   #print "maxC:", maxC
                     tempDistances, tempIndices = [], []
                     for p in range(numPatches):
                         if (zee[p, maxC] == 1):
@@ -59,7 +50,6 @@ def runKMeans(k,patches,maxIter):
                     maxP = tempIndices[np.argmax(tempDistances)]
                     zee[maxP, maxC] = 0
                     zee[maxP, c] = 1
-                   #print "newZee:", zee
                     break
 
         # update step
@@ -70,13 +60,10 @@ def runKMeans(k,patches,maxIter):
                 if (zee[p, c]):
                     numPinC += 1
                     newC[:, c] += patches[:, p]
-            #print "c:", c
-            #print "newC:", newC[:, c]
-            #print "numPinC:", numPinC
             newC[:, c] = newC[:, c] / numPinC
 
         centroids = newC.copy()
-       #print "end of iter:", i, "max:", maxIter
+
         # END_YOUR_CODE
 
     return centroids
@@ -102,7 +89,16 @@ def extractFeatures(patches,centroids):
     features = np.empty((numPatches,k))
 
     # BEGIN_YOUR_CODE (around 9 lines of code expected)
-    raise "Not yet implemented"
+
+    distances = np.zeros( (numPatches, k) )
+    for p in range(numPatches):
+        for c in range(k):
+            distances[p, c] = np.linalg.norm(patches[:, p] - centroids[:, c])
+
+    for p in range(numPatches):
+        for c in range(k):
+            features[p, c] = max(np.mean(distances, axis=1)[p] - distances[p, c], 0)
+
     # END_YOUR_CODE
     return features
 
@@ -124,7 +120,10 @@ def logisticGradient(theta,featureVector,y):
       1D numpy array of gradient of logistic loss w.r.t. to theta
     """
     # BEGIN_YOUR_CODE (around 2 lines of code expected)
-    raise "Not yet implemented."
+
+    x = featureVector * (2 * y - 1)
+    return -(x / (math.exp(np.dot(theta, x)) + 1))
+
     # END_YOUR_CODE
 
 ############################################################
@@ -144,6 +143,15 @@ def hingeLossGradient(theta,featureVector,y):
       1D numpy array of gradient of hinge loss w.r.t. to theta
     """
     # BEGIN_YOUR_CODE (around 6 lines of code expected)
-    raise "Not yet implemented."
+
+    loss = np.zeros(featureVector.size)
+    v = np.dot(theta, featureVector) * (2 * y - 1)
+
+    for f in range(featureVector.size):
+        if (v < 1):
+            loss[f] = -(featureVector[f] * (2 * y - 1))
+
+    return loss
+
     # END_YOUR_CODE
 
